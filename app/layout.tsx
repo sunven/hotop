@@ -3,7 +3,6 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { useRouter, usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,8 +17,6 @@ const footBar = [
   },
 ]
 
-export const dynamic = 'force-dynamic'
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,13 +24,10 @@ export default function RootLayout({
 }>) {
   const router = useRouter()
   const pathname = usePathname()
-  const [innerHeight, setinnerHeight] = useState(0)
-  useEffect(() => {
-    setinnerHeight(window.innerHeight)
-  }, [])
+
   return (
     <html lang="en">
-      <body className={inter.className} style={{ height: innerHeight + 'px' }}>
+      <body className={inter.className}>
         <div className="flex flex-col h-full">
           <header className="bg-white">
             <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
