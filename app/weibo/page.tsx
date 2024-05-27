@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import Link from 'next/link'
 
 type WeiboHotSearch = {
   ok: number
@@ -11,6 +12,7 @@ type RealtimeType = {
   ad_type: string
   word: string
   category: string
+  word_scheme: string
 }
 
 function getHotSearch() {
@@ -38,14 +40,23 @@ export default async function Home() {
     <div className="flow-root p-2">
       <dl className="-my-3 divide-y divide-gray-100 text-sm">
         {data.map((item: RealtimeType, index: number) => (
-          <div key={index} className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
-            <dt className="font-medium text-gray-900 flex gap-1 items-center">
-              {item.word}
-              <span className="whitespace-nowrap rounded-full bg-green-100 px-2.5 py-0.5 text-sm text-green-600">
-                {item.category}
-              </span>
-            </dt>
-          </div>
+          <Link
+            key={index}
+            href={`https://m.weibo.cn/search?containerid=${encodeURIComponent(
+              `100103type=1&t=10&q=${item.word_scheme}`
+            )}`}
+          >
+            <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
+              <dt className="font-medium text-gray-900 flex gap-1 items-center">
+                {item.word}
+                {item.category && (
+                  <span className="whitespace-nowrap rounded-full bg-green-100 px-2.5 py-0.5 text-sm text-green-600">
+                    {item.category}
+                  </span>
+                )}
+              </dt>
+            </div>
+          </Link>
         ))}
       </dl>
     </div>
