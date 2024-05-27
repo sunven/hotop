@@ -12,8 +12,20 @@ const footBar = [
     url: '/weibo',
   },
   {
+    name: 'B站',
+    url: '/bili',
+  },
+  {
     name: '知乎',
     url: '/zhihu',
+  },
+  {
+    name: '抖音',
+    url: '/douyin',
+  },
+  {
+    name: '头条',
+    url: '/toutiao',
   },
 ]
 
