@@ -11,7 +11,7 @@ type WeiboHotSearch = {
 type RealtimeType = {
   ad_type: string
   word: string
-  category: string
+  flag_desc: string
   word_scheme: string
 }
 
@@ -19,7 +19,9 @@ function getHotSearch() {
   return fetch('https://weibo.com/ajax/side/hotSearch')
     .then<WeiboHotSearch>(res => res.json())
     .then(({ data }) => {
-      return data.realtime.filter(c => !['商业投放', '资源投放'].includes(c.ad_type))
+      return data.realtime
+        .filter(c => !['商业投放', '资源投放'].includes(c.ad_type))
+        .filter(c => !['综艺', '剧集'].includes(c.flag_desc))
     })
 }
 
@@ -49,9 +51,9 @@ export default async function Home() {
             <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
               <dt className="font-medium text-gray-900 flex gap-1 items-center">
                 {item.word}
-                {item.category && (
+                {item.flag_desc && (
                   <span className="whitespace-nowrap rounded-full bg-green-100 px-2.5 py-0.5 text-sm text-green-600">
-                    {item.category}
+                    {item.flag_desc}
                   </span>
                 )}
               </dt>
