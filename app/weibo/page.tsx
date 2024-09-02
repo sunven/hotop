@@ -21,7 +21,7 @@ function getHotSearch() {
     .then(({ data }) => {
       return data.realtime
         .filter(c => !['商业投放', '资源投放'].includes(c.ad_type))
-        .filter(c => !['综艺', '剧集'].includes(c.flag_desc))
+        .filter(c => !['综艺', '剧集', '盛典'].includes(c.flag_desc))
     })
 }
 
