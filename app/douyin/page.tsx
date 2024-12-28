@@ -1,7 +1,5 @@
 import { Metadata } from 'next'
 
-export const runtime = 'edge'
-
 type DouyinTopSearch = {
   data: {
     trending_list: WordType[]

@@ -1,7 +1,5 @@
 import { Metadata } from 'next'
 
-export const runtime = 'edge'
-
 type ToutiaoTopSearch = {
   data: { words: WordType[] }[]
 }

@@ -1,8 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 
-export const runtime = 'edge'
-
 type WeiboHotSearch = {
   ok: number
   data: {
