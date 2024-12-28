@@ -13,6 +13,7 @@ type RealtimeType = {
   word: string
   flag_desc: string
   word_scheme: string
+  icon_desc: string
 }
 
 function getHotSearch() {
@@ -22,6 +23,7 @@ function getHotSearch() {
       return data.realtime
         .filter(c => !['商业投放', '资源投放'].includes(c.ad_type))
         .filter(c => !['综艺', '剧集', '盛典'].includes(c.flag_desc))
+        .filter(c => !['商'].includes(c.icon_desc))
     })
 }
 
