@@ -38,7 +38,7 @@ export default function RootLayout({
   const pathname = usePathname()
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <div className="flex flex-col h-full">
           <header className="bg-white">

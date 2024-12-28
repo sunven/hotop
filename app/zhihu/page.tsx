@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 
+export const runtime = 'edge'
+
 type ZhihuTopSearch = {
   top_search: {
     words: WordType[]
