@@ -39,6 +39,9 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="apple-mobile-web-app-title" content="Hotop" />
+      </head>
       <body className={inter.className}>
         <div className="flex flex-col h-full">
           <header className="bg-white">
