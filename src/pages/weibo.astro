@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro'
+export const prerender = false
+const data = await fetch('https://weibo.com/ajax/side/hotSearch')
+  .then(res => res.json())
+  .then(({ data }) => {
+    return data.realtime
+      .filter(c => !['商业投放', '资源投放'].includes(c.ad_type))
+      .filter(c => !['综艺', '剧集', '盛典'].includes(c.flag_desc))
+      .filter(c => !['商'].includes(c.icon_desc))
+  })
+---
+
+<Layout>
+  <dl class="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
+    {
+      data.map(item => (
+        <div class="flex flex-col pb-3">
+          <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{item.word}</dt>
+        </div>
+      ))
+    }
+  </dl>
+</Layout>
