@@ -1,12 +1,45 @@
 ---
-import Welcome from '../components/Welcome.astro'
 import Layout from '../layouts/Layout.astro'
+import { format } from 'date-fns'
+export const prerender = false
+const data = await fetch(`https://cdn.jsdelivr.net/gh/sunven/hotop@master/api/${format(Date.now(), 'yyyy-MM-dd')}.json`)
+  .then(res => res.json())
+  .then(data => {
+    return data
+      .filter(c => !['商业投放', '资源投放'].includes(c.ad_type))
+      .filter(c => !['综艺', '剧集', '盛典'].includes(c.flag_desc))
+      .filter(c => !['商'].includes(c.icon_desc))
+  })
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const iconMap = {
+  热: 'https://simg.s.weibo.com/moter/flags/1_0.png',
+  新: 'https://simg.s.weibo.com/moter/flags/2_0.png',
+}
 ---
 
 <Layout>
-  <Welcome />
-  <p>123</p>
+  <dl class="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
+    {
+      data.map((c, index) => {
+        const imgSrc = iconMap[c.icon_desc]
+        return (
+          <a class="flex flex-col py-2" href={`https://m.weibo.cn/search?containerid=100103type%3D1&q=${c.word}`}>
+            <dd class="font-semibold flex items-center">
+              <span class="text-orange-500 dark:text-gray-400 pr-1">{index + 1}.</span>
+              {c.word}
+              {imgSrc && <img src={imgSrc} class="size-7" />}
+            </dd>
+            {c.category && (
+              <p class="pl-4">
+                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300">
+                  {c.category}
+                </span>
+              </p>
+            )}
+            {c.description && <dt class="text-gray-500 dark:text-gray-400">{c.description}</dt>}
+          </a>
+        )
+      })
+    }
+  </dl>
 </Layout>
