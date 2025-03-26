@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro'
+export const prerender = false
+const { data } = await fetch('https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total?limit=50').then(res =>
+  res.json()
+)
+---
+
+<Layout>
+  <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+    <div class="max-w-2xl mx-auto divide-y divide-gray-200 dark:divide-neutral-700">
+      {
+        data.map(c => {
+          return (
+            <div class="py-8 first:pt-0 last:pb-0">
+              <div class="flex gap-x-5">
+                <div class="grow">
+                  <h3 class="md:text-lg font-semibold text-gray-800 dark:text-neutral-200">{c.target.title}</h3>
+                  <p class="mt-1 text-gray-500 dark:text-neutral-500">{c.target.excerpt}</p>
+                </div>
+              </div>
+            </div>
+          )
+        })
+      }
+    </div>
+  </div>
+</Layout>
