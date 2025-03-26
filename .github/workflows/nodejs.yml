@@ -42,3 +42,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Purge Jsdelivr
+        run: |
+          curl "https://purge.jsdelivr.net/gh/sunven/hotop/api/$(date +%Y-%m-%d).json"
