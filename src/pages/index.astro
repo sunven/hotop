@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro'
 import { format } from 'date-fns'
 export const prerender = false
-const data = await fetch(`https://cdn.jsdelivr.net/gh/sunven/hotop/api/${format(Date.now(), 'yyyy-MM-dd')}.json`)
+const data = await fetch(`https://cdn.jsdelivr.net/gh/sunven/hotop@dev/api/${format(Date.now(), 'yyyy-MM-dd')}.json`)
   .then(res => res.json())
   .then(data => {
     return data
