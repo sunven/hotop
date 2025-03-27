@@ -4,9 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0,30 * * * *"
-  push:
-    branches:
-      - dev # 只在 dev 分支上运行
 
 jobs:
   build:
