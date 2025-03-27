@@ -11,13 +11,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/dev'
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref }}
+          ref: dev
 
       - uses: pnpm/action-setup@v4
         name: Install pnpm
@@ -48,7 +47,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+          branch: dev
 
       - name: Purge Jsdelivr
         run: |
