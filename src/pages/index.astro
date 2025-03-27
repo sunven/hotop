@@ -2,7 +2,11 @@
 import Layout from '../layouts/Layout.astro'
 import { format } from 'date-fns'
 export const prerender = false
-const data = await fetch(`https://cdn.jsdelivr.net/gh/sunven/hotop@dev/api/${format(Date.now(), 'yyyy-MM-dd')}.json`)
+// https://cdn.jsdelivr.net/gh/sunven/hotop@dev/api/2025-03-27.json
+// https://purge.jsdelivr.net/gh/sunven/hotop@dev/api/2025-03-27.json
+const data = await fetch(
+  `https://raw.githubusercontent.com/sunven/hotop/refs/heads/dev/api/${format(Date.now(), 'yyyy-MM-dd')}.json`
+)
   .then(res => res.json())
   .then(data => {
     return data
@@ -19,7 +23,7 @@ const iconMap = {
 ---
 
 <Layout>
-  <dl class="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
+  <dl class="mx-auto max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
     {
       data.map((c, index) => {
         const imgSrc = iconMap[c.icon_desc]

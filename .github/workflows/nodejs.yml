@@ -46,6 +46,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: dev
 
-      - name: Purge Jsdelivr
-        run: |
-          curl "https://purge.jsdelivr.net/gh/sunven/hotop@dev/api/$(date +%Y-%m-%d).json"
+      # - name: Purge Jsdelivr
+      #   run: |
+      #     curl "https://purge.jsdelivr.net/gh/sunven/hotop@dev/api/$(date +%Y-%m-%d).json"
