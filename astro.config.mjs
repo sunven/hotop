@@ -6,6 +6,9 @@ import tailwindcss from '@tailwindcss/vite';
 import cloudflare from '@astrojs/cloudflare';
 
 
+import icon from 'astro-icon';
+
+
 // https://astro.build/config
 export default defineConfig({
   devToolbar: {
@@ -21,4 +24,6 @@ export default defineConfig({
       enabled: false
     }
   }),
+
+  integrations: [icon()],
 });

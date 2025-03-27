@@ -13,11 +13,9 @@ const { data } = await fetch('https://www.zhihu.com/api/v3/feed/topstory/hot-lis
       data.map(c => {
         return (
           <div class="py-4 first:pt-0 last:pb-0">
-            <div class="flex gap-x-5">
-              <div class="grow">
-                <h3 class="md:text-lg font-semibold text-gray-800 dark:text-neutral-200">{c.target.title}</h3>
-                <p class="mt-1 text-gray-500 dark:text-neutral-500 line-clamp-4">{c.target.excerpt}</p>
-              </div>
+            <div class="grow">
+              <h3 class="md:text-lg font-semibold text-gray-800 dark:text-neutral-200">{c.target.title}</h3>
+              <p class="mt-1 text-gray-500 dark:text-neutral-500 line-clamp-4">{c.target.excerpt}</p>
             </div>
           </div>
         )

@@ -1,5 +1,7 @@
 ---
 import clsx from 'clsx'
+import { Icon } from 'astro-icon/components'
+import { ClientRouter } from 'astro:transitions'
 import '../styles/global.css'
 const isWeibo = Astro.url.pathname === '/'
 const isZhihu = Astro.url.pathname === '/zhihu'
@@ -18,6 +20,7 @@ const isZhihu = Astro.url.pathname === '/zhihu'
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
     <title>Hotop</title>
+    <ClientRouter />
   </head>
   <body>
     <header class="h-17">
@@ -46,7 +49,7 @@ const isZhihu = Astro.url.pathname === '/zhihu'
           href="/"
           class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
         >
-          <span class={clsx('icon-[ant-design--weibo-outlined] size-5', isWeibo && 'text-orange-500')}></span>
+          <Icon name="ant-design:weibo-outlined" class={clsx('size-5', isWeibo && 'text-orange-500')} />
           <span
             class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-orange-500 dark:group-hover:text-orange-500"
             >微博</span
@@ -56,7 +59,7 @@ const isZhihu = Astro.url.pathname === '/zhihu'
           href="/zhihu"
           class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
         >
-          <span class={clsx('icon-[ant-design--zhihu-outlined] size-5', isZhihu && 'text-orange-500')}></span>
+          <Icon name="ant-design:zhihu-outlined" class={clsx('size-5', isZhihu && 'text-orange-500')} />
           <span
             class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-orange-500 dark:group-hover:text-orange-500"
             >知乎</span
