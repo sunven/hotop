@@ -3,8 +3,18 @@ import clsx from 'clsx'
 import { Icon } from 'astro-icon/components'
 import { ClientRouter } from 'astro:transitions'
 import '../styles/global.css'
-const isWeibo = Astro.url.pathname === '/'
-const isZhihu = Astro.url.pathname === '/zhihu'
+const list = [
+  {
+    name: '微博',
+    icon: 'ant-design:weibo-outlined',
+    url: '/',
+  },
+  {
+    name: '知乎',
+    icon: 'ant-design:zhihu-outlined',
+    url: '/zhihu',
+  },
+]
 ---
 
 <!doctype html>
@@ -45,26 +55,29 @@ const isZhihu = Astro.url.pathname === '/zhihu'
       class="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600"
     >
       <div class="flex justify-center h-full max-w-lg mx-auto font-medium">
-        <a
-          href="/"
-          class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
-        >
-          <Icon name="ant-design:weibo-outlined" class={clsx('size-5', isWeibo && 'text-orange-500')} />
-          <span
-            class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-orange-500 dark:group-hover:text-orange-500"
-            >微博</span
-          >
-        </a>
-        <a
-          href="/zhihu"
-          class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
-        >
-          <Icon name="ant-design:zhihu-outlined" class={clsx('size-5', isZhihu && 'text-orange-500')} />
-          <span
-            class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-orange-500 dark:group-hover:text-orange-500"
-            >知乎</span
-          >
-        </a>
+        {
+          list.map(c => {
+            const cls = {
+              'text-orange-500': Astro.url.pathname === c.url,
+            }
+            return (
+              <a
+                href={c.url}
+                class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
+              >
+                <Icon name={c.icon} class={clsx('size-5', cls)} />
+                <span
+                  class={clsx(
+                    'text-sm text-gray-500 dark:text-gray-400 group-hover:text-orange-500 dark:group-hover:text-orange-500',
+                    cls
+                  )}
+                >
+                  {c.name}
+                </span>
+              </a>
+            )
+          })
+        }
       </div>
     </footer>
   </body>
