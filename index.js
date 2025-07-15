@@ -2,6 +2,7 @@ import fs from 'fs-extra'
 import * as cheerio from 'cheerio'
 import { pick } from 'es-toolkit'
 import { format } from "date-fns";
+import { TZDate } from "@date-fns/tz";
 import path from 'path'
 import { fileURLToPath } from 'url'
 
@@ -14,7 +15,7 @@ const TRENDING_DETAIL_URL = 'https://m.s.weibo.com/topic/detail?q='
 let RETRY_TIME = 5
 
 async function saveRawJson(data) {
-  const date = format(Date.now(), 'yyyy-MM-dd')
+  const date = format(new TZDate(Date.now(), "Asia/Shanghai"), 'yyyy-MM-dd');
   const apiDir = path.join(__dirname, 'api')
   // 确保 api 目录存在，如果不存在则创建
   await fs.ensureDir(apiDir)
