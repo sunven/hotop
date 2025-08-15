@@ -19,10 +19,6 @@ const data = await fetch(
   `https://raw.githubusercontent.com/sunven/hotop/refs/heads/dev/api/${format(new TZDate(Date.now(), "Asia/Shanghai"), 'yyyy-MM-dd')}.json`
 )
   .then(res => res.json() as Promise<Item[]>)
-  .then(data => {
-    return data
-      .filter(c => !['明星','电视剧','综艺'].some(a => c.category?.includes(a)))
-  })
 
 ---
 
