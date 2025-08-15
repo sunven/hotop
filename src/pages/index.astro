@@ -2,38 +2,40 @@
 import { TZDate } from '@date-fns/tz'
 import Layout from '../layouts/Layout.astro'
 import { format } from 'date-fns'
+
 export const prerender = false
 // https://cdn.jsdelivr.net/gh/sunven/hotop@dev/api/2025-03-27.json
 // https://purge.jsdelivr.net/gh/sunven/hotop@dev/api/2025-03-27.json
+
+type Item = {
+  title: string
+  icon?: string
+  scheme: string
+  category?: string
+  description?: string
+}
+
 const data = await fetch(
   `https://raw.githubusercontent.com/sunven/hotop/refs/heads/dev/api/${format(new TZDate(Date.now(), "Asia/Shanghai"), 'yyyy-MM-dd')}.json`
 )
-  .then(res => res.json())
+  .then(res => res.json() as Promise<Item[]>)
   .then(data => {
     return data
-      .filter(c => !['明星','电视剧','综艺'].some(a => c.category.includes(a)))
-      .filter(c => !['商业投放', '资源投放'].includes(c.ad_type))
-      .filter(c => !['综艺', '剧集', '盛典'].includes(c.flag_desc))
-      .filter(c => !['商'].includes(c.icon_desc))
+      .filter(c => !['明星','电视剧','综艺'].some(a => c.category?.includes(a)))
   })
 
-const iconMap = {
-  热: 'https://simg.s.weibo.com/moter/flags/1_0.png',
-  新: 'https://simg.s.weibo.com/moter/flags/2_0.png',
-}
 ---
 
 <Layout>
   <dl class="mx-auto max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
     {
       data.map((c, index) => {
-        const imgSrc = iconMap[c.icon_desc]
         return (
-          <a class="flex flex-col py-2" href={`https://m.weibo.cn/search?containerid=100103type%3D1&q=${c.word}`}>
+          <a class="flex flex-col py-2" href={c.scheme}>
             <dd class="font-semibold flex items-center">
               <span class="text-orange-500 dark:text-gray-400 pr-1">{index + 1}.</span>
-              {c.word}
-              {imgSrc && <img src={imgSrc} class="size-7" />}
+              {c.title}
+              {c.icon && <img src={c.icon} class="size-7" />}
             </dd>
             {c.category && (
               <p>

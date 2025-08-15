@@ -1,6 +1,5 @@
 import fs from 'fs-extra'
 import * as cheerio from 'cheerio'
-import { pick } from 'es-toolkit'
 import { format } from "date-fns";
 import { TZDate } from "@date-fns/tz";
 import path from 'path'
@@ -9,7 +8,7 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const TRENDING_URL = 'https://weibo.com/ajax/side/hotSearch'
+const TRENDING_URL = 'https://m.weibo.cn/api/container/getIndex?containerid=106003type%3D25%26t%3D3%26disable_hot%3D1%26filter_type%3Drealtimehot'
 const TRENDING_DETAIL_URL = 'https://m.s.weibo.com/topic/detail?q='
 
 let RETRY_TIME = 5
@@ -45,16 +44,25 @@ async function fetchTrendingDetail(title) {
 async function bootstrap() {
   while (RETRY_TIME > 0) {
     try {
-      const { data: { realtime } } = await fetch(TRENDING_URL).then(res => res.json())
-      const detailList = await Promise.all(realtime.map(c => fetchTrendingDetail(c.word)))
-      const list = []
+      const res = await fetch(TRENDING_URL).then(res => res.json())
+      const list = res.data.cards[0].card_group
+        .filter((k) => !k.pic.includes('img_search_stick') && k.desc && !k.actionlog?.ext.includes("ads_word"))
+        .map((k) => {
+          return {
+            title: k.desc,
+            icon: k.icon,
+            scheme: k.scheme,
+          }
+        })
+      const detailList = await Promise.all(list.map(c => fetchTrendingDetail(c.desc)))
+      const result = []
       detailList.forEach((detail, index) => {
-        const item = realtime[index]
+        const item = list[index]
         item.category = detail.category
         item.description = detail.description
-        list.push(pick(item, ['word', 'word_scheme', 'num', 'icon_desc', 'ad_type', 'flag_desc', 'rank', 'category', 'description']))
+        result.push(item)
       })
-      await saveRawJson(list)
+      await saveRawJson(result)
       RETRY_TIME = 0
     } catch (err) {
       console.log(err)
