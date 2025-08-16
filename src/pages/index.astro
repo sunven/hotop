@@ -1,7 +1,7 @@
 ---
 import { TZDate } from '@date-fns/tz'
 import Layout from '../layouts/Layout.astro'
-import { format } from 'date-fns'
+import { format, subDays } from 'date-fns'
 
 export const prerender = false
 // https://cdn.jsdelivr.net/gh/sunven/hotop@dev/api/2025-03-27.json
@@ -15,11 +15,22 @@ type Item = {
   description?: string
 }
 
-const data = await fetch(
-  `https://raw.githubusercontent.com/sunven/hotop/refs/heads/dev/api/${format(new TZDate(Date.now(), "Asia/Shanghai"), 'yyyy-MM-dd')}.json`
-)
-  .then(res => res.json() as Promise<Item[]>)
+const shanghaiNow = new TZDate(Date.now(), 'Asia/Shanghai')
+const urlFor = (dateStr: string) => `https://raw.githubusercontent.com/sunven/hotop/refs/heads/dev/api/${dateStr}.json`
 
+let data: Item[] = []
+
+const todayStr = format(shanghaiNow, 'yyyy-MM-dd')
+const res = await fetch(urlFor(todayStr))
+if (res.ok) {
+  data = (await res.json()) as Item[]
+} else if (res.status === 404) {
+  const yesterdayStr = format(subDays(shanghaiNow, 1), 'yyyy-MM-dd')
+  const res2 = await fetch(urlFor(yesterdayStr))
+  if (res2.ok) {
+    data = (await res2.json()) as Item[]
+  }
+}
 ---
 
 <Layout>
