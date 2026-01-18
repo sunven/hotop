@@ -27,13 +27,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Hotop is a web application that displays trending topics from Chinese social media platforms (Weibo and Zhihu). It consists of:
 
-- A data scraper (`index.js`) that fetches Weibo hot searches and saves them as JSON files
 - An Astro-based web frontend that displays the trending data
-- GitHub Actions automation that runs the scraper every 30 minutes
+- Uses third-party APIs to fetch real-time trending data
 
 ## Key Commands
-
-### Development
 
 ```bash
 pnpm install          # Install dependencies
@@ -42,45 +39,32 @@ pnpm build            # Build for production
 pnpm preview          # Preview production build
 ```
 
-### Data Collection
-
-```bash
-pnpm start            # Run the Weibo scraper (index.js)
-```
-
-This fetches current Weibo trending topics and saves them to `api/YYYY-MM-DD.json`.
-
 ## Architecture
 
 ### Data Flow
 
-1. **Scraper (index.js)**: Fetches Weibo trending data from their mobile API, filters out ads and pinned posts, and saves to `api/` directory as daily JSON files
-2. **GitHub Actions**: Runs scraper every 30 minutes on the `dev` branch, commits new data automatically
-3. **Frontend**: Astro pages fetch data from GitHub raw URLs and display trending topics
+1. **Third-party APIs**:
+   - Weibo: Uses `https://60s.viki.moe/v2/weibo` API (from https://github.com/vikiboss/60s)
+   - Zhihu: Uses official Zhihu API `https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total`
+2. **Frontend**: Astro pages fetch data directly from APIs and display trending topics in real-time
 
 ### Branch Strategy
 
-- `dev`: Used for GitHub Actions schedule triggers and data storage
 - `master`: Used for Cloudflare deployment
 
-**Important**: GitHub Actions schedule triggers only work on the default branch, so the workflow checks out `dev` explicitly.
-
 ### Key Files
-
-**index.js** (Root-level scraper)
-
-- Fetches from Weibo mobile API with authentication cookies
-- Filters out ads and pinned content
-- Saves to `api/YYYY-MM-DD.json` using Shanghai timezone
-- Has retry logic (5 attempts)
-- Cookie in headers may need periodic updates
 
 **src/pages/index.astro** (Weibo trending page)
 
 - Server-side rendered (`prerender: false`)
-- Fetches data from GitHub raw URLs
-- Falls back to yesterday's data if today's is unavailable
-- Uses Shanghai timezone for date calculations
+- Fetches data from third-party API: `https://60s.viki.moe/v2/weibo`
+- Displays hot search topics with optional hot_value
+
+**src/pages/zhihu.astro** (Zhihu trending page)
+
+- Server-side rendered (`prerender: false`)
+- Fetches data from Zhihu official API
+- Displays trending questions with excerpts
 
 **src/layouts/Layout.astro**
 
@@ -95,21 +79,15 @@ This fetches current Weibo trending topics and saves them to `api/YYYY-MM-DD.jso
 - **Deployment**: Cloudflare Pages (via @astrojs/cloudflare adapter)
 - **Styling**: Tailwind CSS 4.x
 - **Icons**: astro-icon with @iconify/json
-- **Date handling**: date-fns with timezone support (@date-fns/tz)
-- **Scraping**: cheerio for HTML parsing
 - **Package manager**: pnpm
 
 ## Important Notes
 
-### Cookie Management
+### Third-party API Dependencies
 
-The Weibo API requires authentication cookies in `index.js:18`. These cookies may expire and need to be updated periodically. If the scraper fails, check and update the `Cookie` header.
-
-### Data Storage
-
-- JSON files in `api/` directory are committed to git
-- Files are named by date in Shanghai timezone (YYYY-MM-DD.json)
-- Frontend fetches from GitHub raw URLs on the `dev` branch
+- **Weibo API**: `https://60s.viki.moe/v2/weibo` (开源项目: https://github.com/vikiboss/60s)
+- **Zhihu API**: `https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total`
+- Both APIs are fetched in real-time without caching or fallback strategies
 
 ### Deployment
 

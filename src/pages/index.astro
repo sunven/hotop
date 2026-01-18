@@ -1,57 +1,30 @@
 ---
-import { TZDate } from '@date-fns/tz'
 import Layout from '../layouts/Layout.astro'
-import { format, subDays } from 'date-fns'
 
 export const prerender = false
-// https://cdn.jsdelivr.net/gh/sunven/hotop@dev/api/2025-03-27.json
-// https://purge.jsdelivr.net/gh/sunven/hotop@dev/api/2025-03-27.json
 
-type Item = {
+type WeiboItem = {
   title: string
-  icon?: string
-  scheme: string
-  category?: string
-  description?: string
+  hot_value: number
+  link: string
 }
 
-const shanghaiNow = new TZDate(Date.now(), 'Asia/Shanghai')
-const urlFor = (dateStr: string) => `https://raw.githubusercontent.com/sunven/hotop/refs/heads/dev/api/${dateStr}.json`
-
-let data: Item[] = []
-
-const todayStr = format(shanghaiNow, 'yyyy-MM-dd')
-const res = await fetch(urlFor(todayStr))
-if (res.ok) {
-  data = (await res.json()) as Item[]
-} else if (res.status === 404) {
-  const yesterdayStr = format(subDays(shanghaiNow, 1), 'yyyy-MM-dd')
-  const res2 = await fetch(urlFor(yesterdayStr))
-  if (res2.ok) {
-    data = (await res2.json()) as Item[]
-  }
-}
+const { data } = await fetch('https://60s.viki.moe/v2/weibo').then(res => res.json())
 ---
 
 <Layout>
   <dl class="mx-auto max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
     {
-      data.map((c, index) => {
+      data.map((item: WeiboItem, index: number) => {
         return (
-          <a class="flex flex-col py-2" href={c.scheme}>
+          <a class="flex flex-col py-2" href={item.link}>
             <dd class="font-semibold flex items-center">
               <span class="text-orange-500 dark:text-gray-400 pr-1">{index + 1}.</span>
-              {c.title}
-              {c.icon && <img src={c.icon} class="size-7" />}
+              {item.title}
             </dd>
-            {/* {c.category && (
-              <p>
-                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300">
-                  {c.category}
-                </span>
-              </p>
-            )} */}
-            {c.description && <dt class="text-gray-500 dark:text-gray-400">{c.description}</dt>}
+            {item.hot_value > 0 && (
+              <dt class="text-gray-500 dark:text-gray-400 text-sm">热度: {item.hot_value}</dt>
+            )}
           </a>
         )
       })
